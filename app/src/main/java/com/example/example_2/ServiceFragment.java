@@ -69,7 +69,7 @@ public class ServiceFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_service, container, false);
         ArrayList<Service> services=db.selectAllServices();
-        RecyclerView recyclerView = view.findViewById(R.id.list);
+        RecyclerView recyclerView = view.findViewById(R.id.list);//
         // создаем адаптер
         ServiceAdapter adapter = new ServiceAdapter(getContext(), services);
         // устанавливаем для списка адаптер
