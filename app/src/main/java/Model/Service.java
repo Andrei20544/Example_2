@@ -6,7 +6,7 @@ public class Service
     private long ID;
     private double Cost;
 
-    public Service(String name, long ID, double cost) {
+    public Service(long ID,String name, double cost) {
         Name = name;
         this.ID = ID;
         Cost = cost;

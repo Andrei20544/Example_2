@@ -3,6 +3,7 @@ package com.example.example_2;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,6 +69,11 @@ public class ServiceFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_service, container, false);
         ArrayList<Service> services=db.selectAllServices();
+        RecyclerView recyclerView = view.findViewById(R.id.list);
+        // создаем адаптер
+        ServiceAdapter adapter = new ServiceAdapter(getContext(), services);
+        // устанавливаем для списка адаптер
+        recyclerView.setAdapter(adapter);
         return view;
     }
 }

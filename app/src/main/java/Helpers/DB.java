@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +57,7 @@ public class DB {
                 long id = mCursor.getLong(NUM_COLUMN_ID_SERVICE);
                 String NameServices = mCursor.getString(NUM_COLUMN_NAME);
                 double CostServices = mCursor.getDouble(NUM_COLUMN_COST);
-                arr.add(new Service(NameServices, id, CostServices));
+                arr.add(new Service( id,NameServices, CostServices));
             } while (mCursor.moveToNext());
         }
         return arr;
@@ -81,6 +83,10 @@ public class DB {
                     " " + COLUMN_TITLE + " TEXT"+")";
             sqLiteDatabase.execSQL(queryNews);
             List<Service> services=new ArrayList<Service>();
+            services.add(new Service(1,"fdsfdfs",40));
+            services.add(new Service(2,"jjhjg",60));
+            Gson gson=new Gson();
+            String json=gson.toJson(services);
             services=JSONHelper.importFromJSON(context);
             for (Service s:services) {
                 ContentValues cv=new ContentValues();
@@ -89,6 +95,7 @@ public class DB {
                 cv.put(COLUMN_COST, s.getCost());
                 sqLiteDatabase.insert(TABLE_SERVICE,null,cv);
             }
+
 
         }
 

@@ -3,6 +3,7 @@ package Helpers;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Build;
+import android.util.Log;
 import android.view.Display;
 
 import com.google.gson.Gson;
@@ -24,7 +25,6 @@ public class JSONHelper
     private static final String FILE_NAME ="text.json";
 
     static boolean exportToJSON(Context context, List<Service> dataList) {
-
         Gson gson = new Gson();
         DataItems dataItems = new DataItems();
         dataItems.setPhones(dataList);
@@ -55,35 +55,33 @@ public class JSONHelper
 
     static List<Service> importFromJSON(Context context) {
 
-        InputStreamReader streamReader = null;
-        FileInputStream fileInputStream = null;
+        InputStream is=null;
+        DataItems dataItems=null;
         try{
-            fileInputStream = context.openFileInput(FILE_NAME);
-            streamReader = new InputStreamReader(fileInputStream);
+            byte[] buffer = null;
+            is = context.getAssets().open("text.json");
+            int size = is.available();
+            buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            String str_data = new String(buffer);
             Gson gson = new Gson();
-            DataItems dataItems = gson.fromJson(streamReader, DataItems.class);
+            dataItems = gson.fromJson(str_data, DataItems.class);
             return  dataItems.getServices();
         }
         catch (IOException ex){
             ex.printStackTrace();
         }
-        finally {
-            if (streamReader != null) {
-                try {
-                    streamReader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (fileInputStream != null) {
-                try {
-                    fileInputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
+//        finally {
+//            if (is != null) {
+//                try {
+//                    Log.d("gfdg",dataItems.getServices().toString());
+//                    is.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//           }
         return null;
     }
 
