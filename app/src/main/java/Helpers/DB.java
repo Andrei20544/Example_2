@@ -50,7 +50,7 @@ public class DB {
                 null);
         ArrayList<Service> arr = new ArrayList<Service>();
         mCursor.moveToFirst();
-        if (!mCursor.isAfterLast()) {
+        if (!mCursor.isAfterLast()) {//
             do {
                 long id = mCursor.getLong(NUM_COLUMN_ID_SERVICE);
                 String NameServices = mCursor.getString(NUM_COLUMN_NAME);
