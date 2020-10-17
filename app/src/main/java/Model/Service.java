@@ -3,10 +3,10 @@ package Model;
 public class Service
 {
     private String Name;
-    private int ID;
+    private long ID;
     private double Cost;
 
-    public Service(String name, int ID, double cost) {
+    public Service(String name, long ID, double cost) {
         Name = name;
         this.ID = ID;
         Cost = cost;
@@ -16,7 +16,7 @@ public class Service
         return Name;
     }
 
-    public int getID() {
+    public long getID() {
         return ID;
     }
 

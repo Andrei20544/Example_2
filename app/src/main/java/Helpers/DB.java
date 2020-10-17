@@ -2,6 +2,7 @@ package Helpers;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -42,6 +43,22 @@ public class DB {
         context=cont;
         OpenHelper mOpenHelper = new OpenHelper(context);
         DataBase= mOpenHelper.getWritableDatabase();
+    }
+
+    public ArrayList<Service> selectAllServices() {
+        Cursor mCursor = DataBase.query(TABLE_SERVICE, null, null, null, null, null,
+                null);
+        ArrayList<Service> arr = new ArrayList<Service>();
+        mCursor.moveToFirst();
+        if (!mCursor.isAfterLast()) {
+            do {
+                long id = mCursor.getLong(NUM_COLUMN_ID_SERVICE);
+                String NameServices = mCursor.getString(NUM_COLUMN_NAME);
+                double CostServices = mCursor.getDouble(NUM_COLUMN_COST);
+                arr.add(new Service(NameServices, id, CostServices));
+            } while (mCursor.moveToNext());
+        }
+        return arr;
     }
 
     private class OpenHelper extends SQLiteOpenHelper
