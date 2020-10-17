@@ -60,7 +60,6 @@ public class DB {
         }
         return arr;
     }
-//
     private class OpenHelper extends SQLiteOpenHelper
     {
         public OpenHelper(Context context) {
