@@ -17,7 +17,7 @@ import Model.Service;
 
 public class DB {
     private static final String DATABASE_NAME = "simple.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String TABLE_SERVICE = "TableService";
     private static final String TABLE_NEWS = "TableNews";
 
@@ -34,7 +34,7 @@ public class DB {
     private static final String COLUMN_TITLE = "Title";
     private static final String COLUMN_DESCRIPTION = "Description";
     private static final int NUM_COLUMN_ID_NEWS = 0;
-    private static final int NUM_COLUMN_DATENEW = 1;
+    private static final int NUM_COLUMN_DATENEWS = 1;
     private static final int NUM_COLUMN_TITLE = 2;
     private static final int NUM_COLUMN_DESCRIPTION = 3;
 
@@ -83,8 +83,6 @@ public class DB {
                     " " + COLUMN_TITLE + " TEXT"+")";
             sqLiteDatabase.execSQL(queryNews);
             List<Service> services=new ArrayList<Service>();
-            services.add(new Service(1,"fdsfdfs",40));
-            services.add(new Service(2,"jjhjg",60));
             Gson gson=new Gson();
             String json=gson.toJson(services);
             services=JSONHelper.importFromJSON(context);
