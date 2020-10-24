@@ -10,9 +10,11 @@ import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 
+import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import Model.News;
 import Model.Service;
 
 public class DB {
@@ -62,6 +64,24 @@ public class DB {
         }
         return arr;
     }
+
+    public ArrayList<News> selectAllNews() {
+        Cursor mCursor = DataBase.query(TABLE_NEWS, null, null, null, null, null,
+                null);
+        ArrayList<News> arr = new ArrayList<News>();
+        mCursor.moveToFirst();
+        if (!mCursor.isAfterLast()) {//
+            do {
+                long id = mCursor.getLong(NUM_COLUMN_ID_NEWS);
+                String Title = mCursor.getString(NUM_COLUMN_TITLE);
+                String Description = mCursor.getString(NUM_COLUMN_DESCRIPTION);
+                String DateNews = mCursor.getString(NUM_COLUMN_DATENEWS);
+                arr.add(new News( id, DateNews, Title, Description));
+            } while (mCursor.moveToNext());
+        }
+        return arr;
+    }
+
     private class OpenHelper extends SQLiteOpenHelper
     {
         public OpenHelper(Context context) {
@@ -81,6 +101,9 @@ public class DB {
                     "" + COLUMN_DATENEWS+ " TEXT," +
                      COLUMN_DESCRIPTION+ " TEXT," +
                     " " + COLUMN_TITLE + " TEXT"+")";
+
+            //загрузка json
+
             sqLiteDatabase.execSQL(queryNews);
             List<Service> services=new ArrayList<Service>();
             Gson gson=new Gson();
@@ -94,7 +117,16 @@ public class DB {
                 sqLiteDatabase.insert(TABLE_SERVICE,null,cv);
             }
 
+            //Загрузка CSV
 
+            List<News> newsList = new ArrayList<News>();
+            newsList = JSONHelper.importFromCSV(context);
+            for(News n:newsList){
+                ContentValues cv = new ContentValues();
+                cv.put(COLUMN_TITLE, n.getTitle());
+                cv.put(COLUMN_DESCRIPTION, n.getDescription());
+                sqLiteDatabase.insert(TABLE_NEWS, null, cv);
+            }
         }
 
         @Override

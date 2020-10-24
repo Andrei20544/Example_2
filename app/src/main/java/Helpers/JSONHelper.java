@@ -8,21 +8,27 @@ import android.view.Display;
 
 import com.google.gson.Gson;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.AccessMode;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
+import Model.News;
 import Model.Service;
 
 import static java.nio.file.AccessMode.*;
 
-public class JSONHelper
-{
-    private static final String FILE_NAME ="text.json";
+public class JSONHelper {
+    private static final String FILE_NAME = "text.json";
 
     static boolean exportToJSON(Context context, List<Service> dataList) {
         Gson gson = new Gson();
@@ -52,6 +58,39 @@ public class JSONHelper
 
         return false;
     }
+
+    static List<News> importFromCSV(Context context) {
+        List<News> news=null;
+        try {
+            FileReader is = new FileReader("file:///android_asset/news.csv");
+            BufferedReader reader = new BufferedReader(is);
+            String line = null;
+            Scanner scanner = null;
+            int index = 0;
+            news = new ArrayList<News>();
+            while ((line = reader.readLine()) != null) {
+                News newNews = new News();
+                scanner = new Scanner(line);
+                scanner.useDelimiter(",");
+                while (scanner.hasNext()) {
+                    String data = scanner.next();
+                    if (index == 0) newNews.setDateNews(data);
+                    else if (index == 1) newNews.setTitle(data);
+                    else if (index == 2) newNews.setDescription(data);
+                    index++;
+                }
+                index = 0;
+                news.add(newNews);
+            }
+            reader.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return news;
+    }
+
 
     static List<Service> importFromJSON(Context context) {
 
