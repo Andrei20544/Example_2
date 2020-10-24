@@ -46,4 +46,8 @@ public class News
     public void setDescription(String description) {
         Description = description;
     }
+
+    public void setID(long ID) {
+        this.ID = ID;
+    }
 }

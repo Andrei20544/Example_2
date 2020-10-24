@@ -62,8 +62,7 @@ public class JSONHelper {
     static List<News> importFromCSV(Context context) {
         List<News> news=null;
         try {
-            FileReader is = new FileReader("file:///android_asset/news.csv");
-            BufferedReader reader = new BufferedReader(is);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(context.getAssets().open("news.csv")));
             String line = null;
             Scanner scanner = null;
             int index = 0;
@@ -71,12 +70,13 @@ public class JSONHelper {
             while ((line = reader.readLine()) != null) {
                 News newNews = new News();
                 scanner = new Scanner(line);
-                scanner.useDelimiter(",");
+                scanner.useDelimiter(";");
                 while (scanner.hasNext()) {
                     String data = scanner.next();
-                    if (index == 0) newNews.setDateNews(data);
-                    else if (index == 1) newNews.setTitle(data);
-                    else if (index == 2) newNews.setDescription(data);
+                    if (index == 0) newNews.setID(Long.parseLong(data));
+                    else if (index == 1) newNews.setDateNews(data);
+                    else if (index == 2) newNews.setTitle(data);
+                    else if (index == 3) newNews.setDescription(data);
                     index++;
                 }
                 index = 0;

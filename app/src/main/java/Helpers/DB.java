@@ -18,8 +18,8 @@ import Model.News;
 import Model.Service;
 
 public class DB {
-    private static final String DATABASE_NAME = "simple.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final String DATABASE_NAME = "wsr7.db";
+    private static final int DATABASE_VERSION = 1;
     private static final String TABLE_SERVICE = "TableService";
     private static final String TABLE_NEWS = "TableNews";
 
@@ -123,16 +123,18 @@ public class DB {
             newsList = JSONHelper.importFromCSV(context);
             for(News n:newsList){
                 ContentValues cv = new ContentValues();
+                cv.put(COLUMN_ID_NEWS, n.getID());
                 cv.put(COLUMN_TITLE, n.getTitle());
                 cv.put(COLUMN_DESCRIPTION, n.getDescription());
+                cv.put(COLUMN_DATENEWS, n.getDateNews());
                 sqLiteDatabase.insert(TABLE_NEWS, null, cv);
             }
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-            DataBase.execSQL("DROP TABLE IF EXISTS " + TABLE_SERVICE);
-            DataBase.execSQL("DROP TABLE IF EXISTS " + TABLE_NEWS);
+//            DataBase.execSQL("DROP TABLE IF EXISTS " + TABLE_SERVICE);
+//            DataBase.execSQL("DROP TABLE IF EXISTS " + TABLE_NEWS);
             onCreate(DataBase);
         }
     }
