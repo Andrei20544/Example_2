@@ -16,12 +16,37 @@ import java.util.List;
 
 import Model.News;
 import Model.Service;
+import Model.User;
 
 public class DB {
     private static final String DATABASE_NAME = "wsr7.db";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE_SERVICE = "TableService";
     private static final String TABLE_NEWS = "TableNews";
+    private static final String TABLE_PATIENT = "TablePatient";
+
+    private static final String COLUMN_ID_PAT = "id";
+    private static final String COLUMN_FIRST_NAME_PAT = "FirstName";
+    private static final String COLUMN_LAST_NAME_PAT = "LastName";
+    private static final String COLUMN_PASS_DATA = "PassData";
+    private static final String COLUMN_PHONE = "Phone";
+    private static final String COLUMN_EMAIL = "EMAIL";
+    private static final String COLUMN_DATEBIRTH = "DateBirth";
+    private static final String COLUMN_POLICENUM = "PoliceNum";
+    private static final String COLUMN_LOGIN = "Login";
+    private static final String COLUMN_PASSWORD = "Password";
+
+    private static final int NUM_COLUMN_ID_PAT = 0;
+    private static final int NUM_COLUMN_FIRST_NAME_PAT = 1;
+    private static final int NUM_COLUMN_LAST_NAME_PAT  = 2;
+    private static final int NUM_COLUMN_PASS_DATA  = 3;
+    private static final int NUM_COLUMN_PHONE = 4;
+    private static final int NUM_COLUMN_EMAIL = 5;
+    private static final int NUM_COLUMN_DATEBIRTH   = 6;
+    private static final int NUM_COLUMN_POLICENUM = 7;
+    private static final int NUM_COLUMN_LOGIN = 8;
+    private static final int NUM_COLUMN_PASSWORD = 9;
+
 
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_NAME = "Name";
@@ -49,6 +74,15 @@ public class DB {
         DataBase= mOpenHelper.getWritableDatabase();
     }
 
+    public User getUser(String login, String password)
+    {
+        Cursor mCursor = DataBase.query(TABLE_PATIENT, null, "login = ? and password = ?", new String[] {login, password}, null, null, null);
+        mCursor.moveToFirst();
+        User user=new User(mCursor.getLong(NUM_COLUMN_ID_PAT), mCursor.getString(NUM_COLUMN_FIRST_NAME_PAT), mCursor.getString(NUM_COLUMN_LAST_NAME_PAT),
+                mCursor.getString(NUM_COLUMN_PASS_DATA), mCursor.getString(NUM_COLUMN_PHONE), mCursor.getString(NUM_COLUMN_EMAIL), mCursor.getString(NUM_COLUMN_DATEBIRTH),
+                mCursor.getString(NUM_COLUMN_POLICENUM), mCursor.getString(NUM_COLUMN_LOGIN), mCursor.getString(NUM_COLUMN_PASSWORD));
+        return user;
+    }
     public ArrayList<Service> selectAllServices() {
         Cursor mCursor = DataBase.query(TABLE_SERVICE, null, null, null, null, null,
                 null);
@@ -96,15 +130,28 @@ public class DB {
                     " " + COLUMN_COST + " TEXT"+")";
             sqLiteDatabase.execSQL(queryService);
 
+            String queryUser = "CREATE TABLE " + TABLE_PATIENT+
+                    " (" + COLUMN_ID_PAT + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "" + COLUMN_FIRST_NAME_PAT+ " TEXT," +
+                    "" + COLUMN_PASS_DATA+ " TEXT," +
+                    "" + COLUMN_PHONE+ " TEXT," +
+                    "" + COLUMN_EMAIL+ " TEXT," +
+                    "" + COLUMN_DATEBIRTH+ " TEXT," +
+                    "" + COLUMN_POLICENUM+ " TEXT," +
+                    "" + COLUMN_LOGIN+ " TEXT," +
+                    "" + COLUMN_PASSWORD+ " TEXT," +
+                    "" + COLUMN_LAST_NAME_PAT + " TEXT"+")";
+            sqLiteDatabase.execSQL(queryUser);
+
             String queryNews = "CREATE TABLE " + TABLE_NEWS+
                     " (" + COLUMN_ID_NEWS + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "" + COLUMN_DATENEWS+ " TEXT," +
                      COLUMN_DESCRIPTION+ " TEXT," +
                     " " + COLUMN_TITLE + " TEXT"+")";
 
-            //загрузка json
-
             sqLiteDatabase.execSQL(queryNews);
+
+            //загрузка json
             List<Service> services=new ArrayList<Service>();
             Gson gson=new Gson();
             String json=gson.toJson(services);
@@ -118,7 +165,6 @@ public class DB {
             }
 
             //Загрузка CSV
-
             List<News> newsList = new ArrayList<News>();
             newsList = JSONHelper.importFromCSV(context);
             for(News n:newsList){
@@ -129,6 +175,20 @@ public class DB {
                 cv.put(COLUMN_DATENEWS, n.getDateNews());
                 sqLiteDatabase.insert(TABLE_NEWS, null, cv);
             }
+
+            User user = new User(1,"AHMAD", "ADKIN", "2456 889914", "87561297546", "a.adkin@dayrep.net", "04.10.1990", "894557411563", "login123", "password123");
+            ContentValues cv = new ContentValues();
+            cv.put(COLUMN_ID_PAT, user.getID());
+            cv.put(COLUMN_FIRST_NAME_PAT, user.getFirstName());
+            cv.put(COLUMN_LAST_NAME_PAT, user.getLastName());
+            cv.put(COLUMN_PASS_DATA, user.getPassData());
+            cv.put(COLUMN_PHONE, user.getPhone());
+            cv.put(COLUMN_EMAIL, user.getEmail());
+            cv.put(COLUMN_DATEBIRTH, user.getDateBirth());
+            cv.put(COLUMN_POLICENUM, user.getPoliceNum());
+            cv.put(COLUMN_LOGIN, user.getLogin());
+            cv.put(COLUMN_PASSWORD, user.getPassword());
+            sqLiteDatabase.insert(TABLE_PATIENT, null, cv);
         }
 
         @Override
