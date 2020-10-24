@@ -60,6 +60,7 @@ public class NewsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        db=new DB(getActivity());
     }
 
     @Override
@@ -69,7 +70,6 @@ public class NewsFragment extends Fragment {
         View v=inflater.inflate(R.layout.fragment_news, container, false);
         RecyclerView rv = v.findViewById(R.id.rv);
         ArrayList<News> news=db.selectAllNews();
-
         NewsAdapter adapter = new NewsAdapter(getContext(), news);
         // устанавливаем для списка адаптер
         rv.setAdapter(adapter);

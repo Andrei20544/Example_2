@@ -19,7 +19,7 @@ import Model.Service;
 
 public class DB {
     private static final String DATABASE_NAME = "simple.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 4;
     private static final String TABLE_SERVICE = "TableService";
     private static final String TABLE_NEWS = "TableNews";
 
